@@ -1,0 +1,67 @@
+The tables must be created in the order they are below . 
+
+CREATE TABLE `jobs` (
+  `job_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
+  `job_key` int(11) unsigned NOT NULL,
+  `Title` varchar(100) NOT NULL,
+  `url` varchar(2083) NOT NULL,
+  `no_of_paras` int(2) unsigned NOT NULL,
+  PRIMARY KEY (`job_id`),
+  UNIQUE KEY `job_key` (`job_key`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `paragraphs` (
+  `paragraph_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `job_id` int(5) unsigned NOT NULL,
+  `para_no` int(2) unsigned NOT NULL,
+  `description` varchar(2000) NOT NULL,
+  PRIMARY KEY (`paragraph_id`),
+  KEY `job_id` (`job_id`),
+  CONSTRAINT `paragraphs_ibfk_1` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `person` (
+  `person_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`person_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+
+
+CREATE TABLE `categories` (
+  `id` int(3) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `p_id` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `p_id` (`p_id`),
+  CONSTRAINT `categories_ibfk_1` FOREIGN KEY (`p_id`) REFERENCES `person` (`person_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `synonyms` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `cat_id` int(3) unsigned NOT NULL,
+  `flag` int(1) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `cat_id` (`cat_id`),
+  CONSTRAINT `synonyms_ibfk_1` FOREIGN KEY (`cat_id`) REFERENCES `categories` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+
+
+
+CREATE TABLE `keywords` (
+  `key_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `paragraph_id` int(10)  NOT NULL,
+  `key_count` int(5) unsigned NOT NULL,
+  `keyword` varchar(255) NOT NULL,
+  `synonym_id` int(3) unsigned NOT NULL,
+  `category_id` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`key_id`),
+  KEY `paragraph_id` (`paragraph_id`),
+  KEY `synonym_id` (`synonym_id`),
+  CONSTRAINT `keywords_ibfk_1` FOREIGN KEY (`paragraph_id`) REFERENCES `paragraphs` (`paragraph_id`),
+  CONSTRAINT `keywords_ibfk_2` FOREIGN KEY (`synonym_id`) REFERENCES `synonyms` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=latin1;
